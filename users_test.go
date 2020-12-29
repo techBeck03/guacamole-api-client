@@ -1,18 +1,16 @@
-// +build all integrationtests
+// +build all unittests
 
 package guacamole
 
 import (
-	"fmt"
 	"os"
 	"testing"
 
-	guac "github.com/techBeck03/guacamole-api-client"
 	"github.com/techBeck03/guacamole-api-client/types"
 )
 
 var (
-	config = guac.Config{
+	config = Config{
 		URI:                    os.Getenv("GUACAMOLE_URL"),
 		Username:               os.Getenv("GUACAMOLE_USERNAME"),
 		Password:               os.Getenv("GUACAMOLE_PASSWORD"),
@@ -22,9 +20,7 @@ var (
 )
 
 func TestListUsers(t *testing.T) {
-	client := guac.New(config)
-
-	fmt.Printf("URL = %s\n", config.URI)
+	client := New(config)
 
 	err := client.Connect()
 	if err != nil {

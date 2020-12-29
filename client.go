@@ -54,7 +54,6 @@ func New(config Config) Client {
 
 // Connect - function for establishing connection to guacamole
 func (c *Client) Connect() error {
-	fmt.Printf("%s/%s\n\n", c.config.URI, tokenPath)
 	resp, err := c.client.PostForm(fmt.Sprintf("%s/%s", c.config.URI, tokenPath),
 		url.Values{
 			"username": {c.config.Username},
@@ -76,7 +75,6 @@ func (c *Client) Connect() error {
 	if err != nil {
 		return err
 	}
-	fmt.Printf("%v", tokenresp)
 	c.token = tokenresp.AuthToken
 	c.baseURL = fmt.Sprintf("%s/api/session/data/%s", c.config.URI, tokenresp.DataSource)
 	if !(c.config.DisableCookies) {
