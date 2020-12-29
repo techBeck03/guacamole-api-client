@@ -32,16 +32,26 @@ type Client struct {
 	token  string
 }
 
-// Connect - function for establishing connection to guacamole
-func (c *Client) Connect() error {
-	if c.config.DisableTLSVerification {
+// New - creates a new guacamole client
+func NewGuacClient(config Config) Client {
+	var client http.Client
+	if config.DisableTLSVerification {
 		transport := &http.Transport{
 			TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
 		}
-		c.client = &http.Client{Transport: transport}
+		client = &http.Client{Transport: transport}
 	} else {
-		c.client = http.DefaultClient
+		client = http.DefaultClient
 	}
+	return Client {
+		client = client,
+		config = config,
+		token  = nil
+	}
+}
+
+// Connect - function for establishing connection to guacamole
+func (c *Client) Connect() error {
 	resp, err := c.client.PostForm(fmt.Sprintf("%s/api/tokens", c.config.URI),
 		url.Values{
 			"username": {c.config.Username},
