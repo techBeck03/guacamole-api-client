@@ -10,7 +10,7 @@ import (
 )
 
 var (
-	config = Config{
+	usersConfig = Config{
 		URI:                    os.Getenv("GUACAMOLE_URL"),
 		Username:               os.Getenv("GUACAMOLE_USERNAME"),
 		Password:               os.Getenv("GUACAMOLE_PASSWORD"),
@@ -20,11 +20,11 @@ var (
 )
 
 func TestListUsers(t *testing.T) {
-	client := New(config)
+	client := New(usersConfig)
 
 	err := client.Connect()
 	if err != nil {
-		t.Errorf("Error %s connecting to guacamole with config %+v", err, config)
+		t.Errorf("Error %s connecting to guacamole with config %+v", err, usersConfig)
 	}
 
 	_, err = client.ListUsers()
@@ -40,11 +40,11 @@ func TestListUsers(t *testing.T) {
 }
 
 func TestCreateUser(t *testing.T) {
-	client := New(config)
+	client := New(usersConfig)
 
 	err := client.Connect()
 	if err != nil {
-		t.Errorf("Error %s connecting to guacamole with config %+v", err, config)
+		t.Errorf("Error %s connecting to guacamole with config %+v", err, usersConfig)
 	}
 
 	_, err = client.CreateUser(&testUser)
@@ -60,11 +60,11 @@ func TestCreateUser(t *testing.T) {
 }
 
 func TestReadUser(t *testing.T) {
-	client := New(config)
+	client := New(usersConfig)
 
 	err := client.Connect()
 	if err != nil {
-		t.Errorf("Error %s connecting to guacamole with config %+v", err, config)
+		t.Errorf("Error %s connecting to guacamole with config %+v", err, usersConfig)
 	}
 
 	user, err := client.ReadUser(testUser.Username)
@@ -84,11 +84,11 @@ func TestReadUser(t *testing.T) {
 }
 
 func TestUpdateUser(t *testing.T) {
-	client := New(config)
+	client := New(usersConfig)
 
 	err := client.Connect()
 	if err != nil {
-		t.Errorf("Error %s connecting to guacamole with config %+v", err, config)
+		t.Errorf("Error %s connecting to guacamole with config %+v", err, usersConfig)
 	}
 
 	user, err := client.ReadUser(testUser.Username)
@@ -112,11 +112,11 @@ func TestUpdateUser(t *testing.T) {
 }
 
 func TestDeleteUser(t *testing.T) {
-	client := New(config)
+	client := New(usersConfig)
 
 	err := client.Connect()
 	if err != nil {
-		t.Errorf("Error %s connecting to guacamole with config %+v", err, config)
+		t.Errorf("Error %s connecting to guacamole with config %+v", err, usersConfig)
 	}
 
 	err = client.DeleteUser(testUser.Username)
