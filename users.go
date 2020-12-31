@@ -8,7 +8,8 @@ import (
 )
 
 const (
-	usersBasePath = "users"
+	usersBasePath           = "users"
+	userPermissionsBasePath = "/connectionGroupPermissions/"
 )
 
 // CreateUser creates a guacamole user
@@ -95,4 +96,52 @@ func (c *Client) ListUsers() ([]types.GuacUser, error) {
 	}
 
 	return userList, nil
+}
+
+// AddUserConnectionPermissions adds connection permissions to a user
+func (c *Client) AddUserConnectionPermissions(username string, identifiers []string) error {
+	var permissionItems []types.GuacPermissionItem
+
+	for identifer := range identifiers {
+		permissionItems = append(permissionItems, types.GuacPermissionItem{
+			Op:    "add",
+			Path:  fmt.Sprintf("%s/%s", userPermissionsBasePath, identifiers[identifer]),
+			Value: "READ",
+		})
+	}
+	request, err := c.CreateJSONRequest(http.MethodPatch, fmt.Sprintf("%s/%s/%s/permissions", c.baseURL, usersBasePath, username), permissionItems)
+
+	if err != nil {
+		return err
+	}
+
+	err = c.Call(request, nil)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// RemoveUserConnectionPermissions removes connection permissions from a user
+func (c *Client) RemoveUserConnectionPermissions(username string, identifiers []string) error {
+	var permissionItems []types.GuacPermissionItem
+
+	for identifer := range identifiers {
+		permissionItems = append(permissionItems, types.GuacPermissionItem{
+			Op:    "remove",
+			Path:  fmt.Sprintf("%s/%s", userPermissionsBasePath, identifiers[identifer]),
+			Value: "READ",
+		})
+	}
+	request, err := c.CreateJSONRequest(http.MethodPatch, fmt.Sprintf("%s/%s/%s/permissions", c.baseURL, usersBasePath, username), permissionItems)
+
+	if err != nil {
+		return err
+	}
+
+	err = c.Call(request, nil)
+	if err != nil {
+		return err
+	}
+	return nil
 }
