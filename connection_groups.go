@@ -90,7 +90,7 @@ func (c *Client) ReadConnectionGroup(identifier string) (types.GuacConnectionGro
 	return ret, nil
 }
 
-// ReadConnectionGroupByPath gets a connection group by path (Parent/Identifier)
+// ReadConnectionGroupByPath gets a connection group by path (Parent/Name)
 func (c *Client) ReadConnectionGroupByPath(path string) (types.GuacConnectionGroup, error) {
 	var ret types.GuacConnectionGroup
 	var parentIdentifier string

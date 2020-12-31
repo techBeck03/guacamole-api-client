@@ -3,6 +3,7 @@ package guacamole
 import (
 	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/techBeck03/guacamole-api-client/types"
 )
@@ -46,6 +47,68 @@ func (c *Client) ReadConnection(identifier string) (types.GuacConnection, error)
 
 	// Get connection parameters
 	request, err = c.CreateJSONRequest(http.MethodGet, fmt.Sprintf("%s/%s/%s/parameters", c.baseURL, connectionsBasePath, identifier), nil)
+
+	if err != nil {
+		return ret, err
+	}
+
+	err = c.Call(request, &retParams)
+	if err != nil {
+		return ret, err
+	}
+
+	ret.Properties = retParams
+
+	return ret, nil
+}
+
+// ReadConnectionByPath gets a connection by path (Parent/Name)
+func (c *Client) ReadConnectionByPath(path string) (types.GuacConnection, error) {
+	var ret types.GuacConnection
+	var retParams types.GuacConnectionParameters
+	var parentIdentifier string
+
+	splitPath := strings.Split(path, "/")
+	connectionTree, err := c.GetConnectionTree()
+
+	if err != nil {
+		return ret, err
+	}
+
+	flattenedConnections, flattenedGroups, err := flatten([]types.GuacConnectionGroup{connectionTree})
+
+	if err != nil {
+		return ret, err
+	}
+
+	if strings.ToUpper(splitPath[0]) == "ROOT" {
+		parentIdentifier = "ROOT"
+	} else {
+		for group := range flattenedGroups {
+			if flattenedGroups[group].Name == splitPath[0] {
+				parentIdentifier = flattenedGroups[group].Identifier
+				break
+			}
+		}
+	}
+
+	if parentIdentifier == "" {
+		return ret, fmt.Errorf("No connection group found for parent with name: %s", splitPath[0])
+	}
+
+	for connection := range flattenedConnections {
+		if (flattenedConnections[connection].ParentIdentifier == parentIdentifier) && (flattenedConnections[connection].Name == splitPath[1]) {
+			ret = flattenedConnections[connection]
+			break
+		}
+	}
+
+	if ret.Identifier == "" {
+		return ret, fmt.Errorf("No connection group found with parentIdentifier = %s\tname = %s", parentIdentifier, splitPath[1])
+	}
+
+	// Get connection parameters
+	request, err := c.CreateJSONRequest(http.MethodGet, fmt.Sprintf("%s/%s/%s/parameters", c.baseURL, connectionsBasePath, ret.Identifier), nil)
 
 	if err != nil {
 		return ret, err
