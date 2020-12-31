@@ -34,7 +34,7 @@ func TestListConnections(t *testing.T) {
 
 	_, err = client.ListConnections()
 	if err != nil {
-		t.Errorf("Error %s listing users with client %+v", err, client)
+		t.Errorf("Error %s listing connections with client %+v", err, client)
 	}
 
 	err = client.Disconnect()

@@ -57,8 +57,8 @@ func flatten(nested []types.GuacConnectionGroup) ([]types.GuacConnection, []type
 }
 
 // CreateConnectionGroup creates a guacamole connection group
-func (c *Client) CreateConnectionGroup(group *types.GuacConnectionGroup) (types.GuacConnection, error) {
-	var ret types.GuacConnection
+func (c *Client) CreateConnectionGroup(group *types.GuacConnectionGroup) (types.GuacConnectionGroup, error) {
+	var ret types.GuacConnectionGroup
 	request, err := c.CreateJSONRequest(http.MethodPost, fmt.Sprintf("%s/%s", c.baseURL, connectionGroupsBasePath), group)
 
 	if err != nil {
