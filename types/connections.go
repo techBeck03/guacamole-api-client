@@ -83,8 +83,8 @@ type GuacConnectionParameters struct {
 	Timezone                string `json:"timezone,omitempty"`
 	ServerKeepaliveInterval string `json:"server-alive-interval,omitempty"`
 	InitialProgram          string `json:"initial-program,omitempty"`
-	ClientName              string `json:client-name,omitempty"`
-	KeyboardLayout          string `json:server-layout,omitempty"`
+	ClientName              string `json:"client-name,omitempty"`
+	KeyboardLayout          string `json:"server-layout,omitempty"`
 	AdministratorConsole    string `json:"console,omitempty"`
 
 	/*** Terminal Behavior ***/
