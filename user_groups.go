@@ -8,8 +8,7 @@ import (
 )
 
 const (
-	userGroupsBasePath           = "userGroups"
-	userGroupPermissionsBasePath = "/connectionGroupPermissions/"
+	userGroupsBasePath = "userGroups"
 )
 
 // CreateUserGroup creates a guacamole user group
@@ -98,17 +97,26 @@ func (c *Client) ListUserGroups() ([]types.GuacUserGroup, error) {
 	return userGroupList, nil
 }
 
-// AddUserGroupConnectionPermissions adds connection permissions to a user group
-func (c *Client) AddUserGroupConnectionPermissions(group string, identifiers []string) error {
-	var permissionItems []types.GuacPermissionItem
+// GetUserGroupPermissions gets a user group's permissions by group name
+func (c *Client) GetUserGroupPermissions(identifier string) (types.GuacPermissionData, error) {
+	var ret types.GuacPermissionData
 
-	for identifer := range identifiers {
-		permissionItems = append(permissionItems, types.GuacPermissionItem{
-			Op:    "add",
-			Path:  fmt.Sprintf("%s/%s", userGroupPermissionsBasePath, identifiers[identifer]),
-			Value: "READ",
-		})
+	request, err := c.CreateJSONRequest(http.MethodGet, fmt.Sprintf("%s/%s/%s/permissions", c.baseURL, userGroupsBasePath, identifier), nil)
+
+	if err != nil {
+		return ret, err
 	}
+
+	err = c.Call(request, &ret)
+	if err != nil {
+		return ret, err
+	}
+	return ret, nil
+}
+
+// AddUserGroupConnectionPermissions adds connection permissions to a user group
+func (c *Client) AddUserGroupConnectionPermissions(group string, permissionItems *[]types.GuacPermissionItem) error {
+
 	request, err := c.CreateJSONRequest(http.MethodPatch, fmt.Sprintf("%s/%s/%s/permissions", c.baseURL, userGroupsBasePath, group), permissionItems)
 
 	if err != nil {
@@ -123,16 +131,8 @@ func (c *Client) AddUserGroupConnectionPermissions(group string, identifiers []s
 }
 
 // RemoveUserGroupConnectionPermissions removes connection permissions from a user group
-func (c *Client) RemoveUserGroupConnectionPermissions(group string, identifiers []string) error {
-	var permissionItems []types.GuacPermissionItem
+func (c *Client) RemoveUserGroupConnectionPermissions(group string, permissionItems *[]types.GuacPermissionItem) error {
 
-	for identifer := range identifiers {
-		permissionItems = append(permissionItems, types.GuacPermissionItem{
-			Op:    "remove",
-			Path:  fmt.Sprintf("%s/%s", userGroupPermissionsBasePath, identifiers[identifer]),
-			Value: "READ",
-		})
-	}
 	request, err := c.CreateJSONRequest(http.MethodPatch, fmt.Sprintf("%s/%s/%s/permissions", c.baseURL, userGroupsBasePath, group), permissionItems)
 
 	if err != nil {

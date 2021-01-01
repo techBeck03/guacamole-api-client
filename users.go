@@ -8,8 +8,7 @@ import (
 )
 
 const (
-	usersBasePath           = "users"
-	userPermissionsBasePath = "/connectionGroupPermissions/"
+	usersBasePath = "users"
 )
 
 // CreateUser creates a guacamole user
@@ -98,17 +97,26 @@ func (c *Client) ListUsers() ([]types.GuacUser, error) {
 	return userList, nil
 }
 
-// AddUserConnectionPermissions adds connection permissions to a user
-func (c *Client) AddUserConnectionPermissions(username string, identifiers []string) error {
-	var permissionItems []types.GuacPermissionItem
+// GetUserPermissions gets a user's permissions by username
+func (c *Client) GetUserPermissions(username string) (types.GuacPermissionData, error) {
+	var ret types.GuacPermissionData
 
-	for identifer := range identifiers {
-		permissionItems = append(permissionItems, types.GuacPermissionItem{
-			Op:    "add",
-			Path:  fmt.Sprintf("%s/%s", userPermissionsBasePath, identifiers[identifer]),
-			Value: "READ",
-		})
+	request, err := c.CreateJSONRequest(http.MethodGet, fmt.Sprintf("%s/%s/%s/permissions", c.baseURL, usersBasePath, username), nil)
+
+	if err != nil {
+		return ret, err
 	}
+
+	err = c.Call(request, &ret)
+	if err != nil {
+		return ret, err
+	}
+	return ret, nil
+}
+
+// AddUserConnectionPermissions adds connection permissions to a user
+func (c *Client) AddUserConnectionPermissions(username string, permissionItems *[]types.GuacPermissionItem) error {
+
 	request, err := c.CreateJSONRequest(http.MethodPatch, fmt.Sprintf("%s/%s/%s/permissions", c.baseURL, usersBasePath, username), permissionItems)
 
 	if err != nil {
@@ -123,16 +131,8 @@ func (c *Client) AddUserConnectionPermissions(username string, identifiers []str
 }
 
 // RemoveUserConnectionPermissions removes connection permissions from a user
-func (c *Client) RemoveUserConnectionPermissions(username string, identifiers []string) error {
-	var permissionItems []types.GuacPermissionItem
+func (c *Client) RemoveUserConnectionPermissions(username string, permissionItems *[]types.GuacPermissionItem) error {
 
-	for identifer := range identifiers {
-		permissionItems = append(permissionItems, types.GuacPermissionItem{
-			Op:    "remove",
-			Path:  fmt.Sprintf("%s/%s", userPermissionsBasePath, identifiers[identifer]),
-			Value: "READ",
-		})
-	}
 	request, err := c.CreateJSONRequest(http.MethodPatch, fmt.Sprintf("%s/%s/%s/permissions", c.baseURL, usersBasePath, username), permissionItems)
 
 	if err != nil {
