@@ -4,7 +4,7 @@ include .env
 # This only runs in the make command shell
 # so won't muddy up, e.g. your login shell
 export $(shell sed 's/=.*//' .env)
-.PHONY:	lint test it
+.PHONY:	lint test
 
 all: lint test
 
