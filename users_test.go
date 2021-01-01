@@ -179,7 +179,7 @@ func TestAddUserConnectionPermissions(t *testing.T) {
 			Value: "READ",
 		},
 	}
-	err = client.AddUserConnectionPermissions(testUser.Username, &testUserPermissionItems)
+	err = client.SetUserConnectionPermissions(testUser.Username, &testUserPermissionItems)
 
 	if err != nil {
 		t.Errorf("Error %s adding user connection permissions for user: %s with client %+v", err, testUser.Username, client)
@@ -230,7 +230,7 @@ func TestRemoveUserConnectionPermissions(t *testing.T) {
 		},
 	}
 
-	err = client.RemoveUserConnectionPermissions(testUser.Username, &testUserPermissionItems)
+	err = client.SetUserConnectionPermissions(testUser.Username, &testUserPermissionItems)
 
 	if err != nil {
 		t.Errorf("Error %s adding user connection permissions for user: %s with client %+v", err, testUser.Username, client)

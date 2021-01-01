@@ -180,7 +180,7 @@ func TestAddUserGroupConnectionPermissions(t *testing.T) {
 		},
 	}
 
-	err = client.AddUserGroupConnectionPermissions(testGroup.Identifier, &testUserGroupPermissionItems)
+	err = client.SetUserGroupConnectionPermissions(testGroup.Identifier, &testUserGroupPermissionItems)
 
 	if err != nil {
 		t.Errorf("Error %s adding user connection permissions for group: %s with client %+v", err, testGroup.Identifier, client)
@@ -231,7 +231,7 @@ func TestRemoveUserGroupConnectionPermissions(t *testing.T) {
 		},
 	}
 
-	err = client.RemoveUserGroupConnectionPermissions(testGroup.Identifier, &testUserGroupPermissionItems)
+	err = client.SetUserGroupConnectionPermissions(testGroup.Identifier, &testUserGroupPermissionItems)
 
 	if err != nil {
 		t.Errorf("Error %s adding connection permissions for group: %s with client %+v", err, testGroup.Identifier, client)

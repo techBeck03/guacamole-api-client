@@ -114,24 +114,8 @@ func (c *Client) GetUserPermissions(username string) (types.GuacPermissionData, 
 	return ret, nil
 }
 
-// AddUserConnectionPermissions adds connection permissions to a user
-func (c *Client) AddUserConnectionPermissions(username string, permissionItems *[]types.GuacPermissionItem) error {
-
-	request, err := c.CreateJSONRequest(http.MethodPatch, fmt.Sprintf("%s/%s/%s/permissions", c.baseURL, usersBasePath, username), permissionItems)
-
-	if err != nil {
-		return err
-	}
-
-	err = c.Call(request, nil)
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
-// RemoveUserConnectionPermissions removes connection permissions from a user
-func (c *Client) RemoveUserConnectionPermissions(username string, permissionItems *[]types.GuacPermissionItem) error {
+// SetUserConnectionPermissions adds connection permissions to a user
+func (c *Client) SetUserConnectionPermissions(username string, permissionItems *[]types.GuacPermissionItem) error {
 
 	request, err := c.CreateJSONRequest(http.MethodPatch, fmt.Sprintf("%s/%s/%s/permissions", c.baseURL, usersBasePath, username), permissionItems)
 

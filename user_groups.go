@@ -114,24 +114,8 @@ func (c *Client) GetUserGroupPermissions(identifier string) (types.GuacPermissio
 	return ret, nil
 }
 
-// AddUserGroupConnectionPermissions adds connection permissions to a user group
-func (c *Client) AddUserGroupConnectionPermissions(group string, permissionItems *[]types.GuacPermissionItem) error {
-
-	request, err := c.CreateJSONRequest(http.MethodPatch, fmt.Sprintf("%s/%s/%s/permissions", c.baseURL, userGroupsBasePath, group), permissionItems)
-
-	if err != nil {
-		return err
-	}
-
-	err = c.Call(request, nil)
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
-// RemoveUserGroupConnectionPermissions removes connection permissions from a user group
-func (c *Client) RemoveUserGroupConnectionPermissions(group string, permissionItems *[]types.GuacPermissionItem) error {
+// SetUserGroupConnectionPermissions adds connection permissions to a user group
+func (c *Client) SetUserGroupConnectionPermissions(group string, permissionItems *[]types.GuacPermissionItem) error {
 
 	request, err := c.CreateJSONRequest(http.MethodPatch, fmt.Sprintf("%s/%s/%s/permissions", c.baseURL, userGroupsBasePath, group), permissionItems)
 
