@@ -23,7 +23,7 @@ import (
 
 func main() {
 	client := guac.New(guac.Config{
-		URI:                    "https://guac.example.com",
+		URL:                    "https://guac.example.com",
 		Username:               "guacadmin",
 		Password:               "guacadmin",
 		DisableTLSVerification: true,
