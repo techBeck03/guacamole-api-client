@@ -19,7 +19,7 @@ const (
 
 // Config - Configuration details for connecting to guacamole
 type Config struct {
-	URI                    string
+	URL                    string
 	Password               string
 	Username               string
 	DisableTLSVerification bool
@@ -54,7 +54,7 @@ func New(config Config) Client {
 
 // Connect - function for establishing connection to guacamole
 func (c *Client) Connect() error {
-	resp, err := c.client.PostForm(fmt.Sprintf("%s/%s", c.config.URI, tokenPath),
+	resp, err := c.client.PostForm(fmt.Sprintf("%s/%s", c.config.URL, tokenPath),
 		url.Values{
 			"username": {c.config.Username},
 			"password": {c.config.Password},
@@ -76,7 +76,7 @@ func (c *Client) Connect() error {
 		return err
 	}
 	c.token = tokenresp.AuthToken
-	c.baseURL = fmt.Sprintf("%s/api/session/data/%s", c.config.URI, tokenresp.DataSource)
+	c.baseURL = fmt.Sprintf("%s/api/session/data/%s", c.config.URL, tokenresp.DataSource)
 	if !(c.config.DisableCookies) {
 		c.cookies = resp.Cookies()
 	}
@@ -86,7 +86,7 @@ func (c *Client) Connect() error {
 // Disconnect deletes a user session token
 func (c *Client) Disconnect() error {
 
-	request, err := c.CreateJSONRequest(http.MethodDelete, fmt.Sprintf("%s/%s/%s", c.config.URI, tokenPath, c.token), nil)
+	request, err := c.CreateJSONRequest(http.MethodDelete, fmt.Sprintf("%s/%s/%s", c.config.URL, tokenPath, c.token), nil)
 	if err != nil {
 		return err
 	}

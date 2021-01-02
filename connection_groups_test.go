@@ -12,7 +12,7 @@ import (
 
 var (
 	connectionGroupsConfig = Config{
-		URI:                    os.Getenv("GUACAMOLE_URL"),
+		URL:                    os.Getenv("GUACAMOLE_URL"),
 		Username:               os.Getenv("GUACAMOLE_USERNAME"),
 		Password:               os.Getenv("GUACAMOLE_PASSWORD"),
 		DisableTLSVerification: true,
