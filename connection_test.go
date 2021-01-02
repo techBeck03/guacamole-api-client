@@ -52,7 +52,7 @@ func TestCreateConnection(t *testing.T) {
 		t.Errorf("Error %s connecting to guacamole with config %+v", err, connectionsConfig)
 	}
 
-	createdConnection, err := client.CreateConnection(&testConnection)
+	err = client.CreateConnection(&testConnection)
 	if err != nil {
 		t.Errorf("Error %s creating connection: %s with client %+v", err, testConnection.Name, client)
 	}
@@ -62,8 +62,6 @@ func TestCreateConnection(t *testing.T) {
 	if err != nil {
 		t.Errorf("Disconnect errors: %s\n", err)
 	}
-
-	testConnection = createdConnection
 }
 
 func TestReadConnection(t *testing.T) {

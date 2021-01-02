@@ -1,6 +1,6 @@
 package guacamole
 
 const (
-	connectionPermissionsBasePath      = "/connectionPermissions"
-	connectionGroupPermissionsBasePath = "/connectionGroupPermissions"
+	ConnectionPermissionsBasePath      = "/connectionPermissions"
+	ConnectionGroupPermissionsBasePath = "/connectionGroupPermissions"
 )

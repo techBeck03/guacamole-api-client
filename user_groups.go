@@ -12,19 +12,19 @@ const (
 )
 
 // CreateUserGroup creates a guacamole user group
-func (c *Client) CreateUserGroup(userGroup *types.GuacUserGroup) (types.GuacUserGroup, error) {
-	var ret types.GuacUserGroup
+func (c *Client) CreateUserGroup(userGroup *types.GuacUserGroup) error {
 	request, err := c.CreateJSONRequest(http.MethodPost, fmt.Sprintf("%s/%s", c.baseURL, userGroupsBasePath), userGroup)
 
 	if err != nil {
-		return ret, err
+		return err
 	}
 
-	err = c.Call(request, &ret)
+	err = c.Call(request, &userGroup)
 	if err != nil {
-		return ret, err
+		return err
 	}
-	return ret, nil
+
+	return nil
 }
 
 // ReadUserGroup gets a user group by name

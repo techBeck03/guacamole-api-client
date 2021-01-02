@@ -13,19 +13,18 @@ const (
 )
 
 // CreateConnection creates a guacamole connection
-func (c *Client) CreateConnection(connection *types.GuacConnection) (types.GuacConnection, error) {
-	var ret types.GuacConnection
+func (c *Client) CreateConnection(connection *types.GuacConnection) error {
 	request, err := c.CreateJSONRequest(http.MethodPost, fmt.Sprintf("%s/%s", c.baseURL, connectionsBasePath), connection)
 
 	if err != nil {
-		return ret, err
+		return err
 	}
 
-	err = c.Call(request, &ret)
+	err = c.Call(request, &connection)
 	if err != nil {
-		return ret, err
+		return err
 	}
-	return ret, nil
+	return nil
 }
 
 // ReadConnection gets a connection by identifier

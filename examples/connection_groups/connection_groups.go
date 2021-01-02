@@ -26,27 +26,25 @@ func main() {
 		fmt.Println("Connection successful")
 	}
 
-	// Create new connection
-	newConnection := types.GuacConnection{
-		Name:             "Testing Connection",
-		Protocol:         "ssh",
+	// Create new connection group
+	newConnectionGroup := types.GuacConnectionGroup{
+		Name:             "Testing Group",
 		ParentIdentifier: "ROOT",
+		Type:             "ORGANIZATIONAL",
 	}
 
-	createdConnection, err := client.CreateConnection(&newConnection)
+	err = client.CreateConnectionGroup(&newConnectionGroup)
 
 	if err != nil {
 		log.Fatal(err)
 	} else {
-		fmt.Printf("%+v", createdConnection)
+		fmt.Printf("%+v", newConnectionGroup)
 	}
 
-	// Update Connection
-	createdConnection.Properties.Hostname = "testing.example.com"
-	createdConnection.Properties.Port = "22"
-	createdConnection.Attributes.MaxConnections = "2"
+	// Update connection group
+	newConnectionGroup.Type = "BALANCING"
 
-	err = client.UpdateConnection(&createdConnection)
+	err = client.UpdateConnectionGroup(&newConnectionGroup)
 
 	if err != nil {
 		log.Fatal(err)
@@ -54,31 +52,26 @@ func main() {
 		fmt.Printf("update successful")
 	}
 
-	// Read Connection by identifier
-	readConnection, err := client.ReadConnection(createdConnection.Identifier)
+	// Read connection group by identifier
+	readConnectionGroup, err := client.ReadConnectionGroup(newConnectionGroup.Identifier)
 
 	if err != nil {
 		log.Fatal(err)
 	} else {
-		fmt.Printf("Read connection:\n%+v\n", readConnection)
+		fmt.Printf("Read connection group:\n%+v\n", readConnectionGroup)
 	}
 
-	// Read Connection by Path
-	readConnection, err = client.ReadConnectionByPath("ROOT/Testing Connection")
+	// Read connection group by Path
+	readConnectionGroup, err = client.ReadConnectionGroupByPath("ROOT/Testing Group")
 
 	if err != nil {
 		log.Fatal(err)
 	} else {
-		fmt.Printf("Read connection:\n%+v\n", readConnection)
+		fmt.Printf("Read connection group:\n%+v\n", readConnectionGroup)
 	}
 
-	if err != nil {
-		log.Fatal(err)
-	} else {
-		fmt.Printf("Read connection:\n%+v\n", readConnection)
-	}
-
-	err = client.DeleteConnection(createdConnection.Identifier)
+	// Delete connection group
+	err = client.DeleteConnectionGroup(newConnectionGroup.Identifier)
 
 	if err != nil {
 		fmt.Println(err)

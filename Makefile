@@ -9,8 +9,8 @@ export $(shell sed 's/=.*//' .env)
 all: lint test
 
 lint:
-	go vet ./...
-	go fmt ./...
+	go vet ./
+	go fmt ./
 
 test: lint
 	go test -count=1 -v -cover --race -tags="unittests" ./

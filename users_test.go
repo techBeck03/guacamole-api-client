@@ -58,7 +58,7 @@ func TestCreateUser(t *testing.T) {
 		t.Errorf("Error %s connecting to guacamole with config %+v", err, usersConfig)
 	}
 
-	_, err = client.CreateUser(&testUser)
+	err = client.CreateUser(&testUser)
 	if err != nil {
 		t.Errorf("Error %s creating user: %s with client %+v", err, testUser.Username, client)
 	}
@@ -150,32 +150,28 @@ func TestAddUserConnectionPermissions(t *testing.T) {
 		t.Errorf("Error %s connecting to guacamole with config %+v", err, usersConfig)
 	}
 
-	group, err := client.CreateConnectionGroup((&testUserConnectionGroup))
-
-	testUserConnectionGroup = group
+	err = client.CreateConnectionGroup((&testUserConnectionGroup))
 
 	if err != nil {
 		t.Errorf("Error %s creating connection group: %s with client %+v", err, testUserConnectionGroup.Name, client)
 	}
 
-	testUserConnection.ParentIdentifier = group.Identifier
+	testUserConnection.ParentIdentifier = testUserConnectionGroup.Identifier
 
-	connection, err := client.CreateConnection(&testUserConnection)
+	err = client.CreateConnection(&testUserConnection)
 	if err != nil {
 		t.Errorf("Error %s creating user connection: %s with client %+v", err, testUserConnection.Identifier, client)
 	}
 
-	testUserConnection = connection
-
 	testUserPermissionItems = []types.GuacPermissionItem{
 		{
 			Op:    "add",
-			Path:  fmt.Sprintf("%s/%s", connectionGroupPermissionsBasePath, testUserConnectionGroup.Identifier),
+			Path:  fmt.Sprintf("%s/%s", ConnectionGroupPermissionsBasePath, testUserConnectionGroup.Identifier),
 			Value: "READ",
 		},
 		{
 			Op:    "add",
-			Path:  fmt.Sprintf("%s/%s", connectionPermissionsBasePath, testUserConnection.Identifier),
+			Path:  fmt.Sprintf("%s/%s", ConnectionPermissionsBasePath, testUserConnection.Identifier),
 			Value: "READ",
 		},
 	}
@@ -190,16 +186,16 @@ func TestAddUserConnectionPermissions(t *testing.T) {
 		t.Errorf("Error %s reading user permissions for: %s with client %+v", err, testUser.Username, client)
 	}
 
-	_, ok := permissions.ConnectionGroupPermissions[group.Identifier]
+	_, ok := permissions.ConnectionGroupPermissions[testUserConnectionGroup.Identifier]
 
 	if !ok {
-		t.Errorf("Error adding connection group: %s permissions for: %s with client %+v", group.Identifier, testUser.Username, client)
+		t.Errorf("Error adding connection group: %s permissions for: %s with client %+v", testUserConnectionGroup.Identifier, testUser.Username, client)
 	}
 
-	_, ok = permissions.ConnectionPermissions[connection.Identifier]
+	_, ok = permissions.ConnectionPermissions[testUserConnection.Identifier]
 
 	if !ok {
-		t.Errorf("Error adding connection: %s permissions for: %s with client %+v", connection.Identifier, testUser.Username, client)
+		t.Errorf("Error adding connection: %s permissions for: %s with client %+v", testUserConnection.Identifier, testUser.Username, client)
 	}
 
 	err = client.Disconnect()
@@ -220,12 +216,12 @@ func TestRemoveUserConnectionPermissions(t *testing.T) {
 	testUserPermissionItems = []types.GuacPermissionItem{
 		{
 			Op:    "remove",
-			Path:  fmt.Sprintf("%s/%s", connectionGroupPermissionsBasePath, testUserConnectionGroup.Identifier),
+			Path:  fmt.Sprintf("%s/%s", ConnectionGroupPermissionsBasePath, testUserConnectionGroup.Identifier),
 			Value: "READ",
 		},
 		{
 			Op:    "remove",
-			Path:  fmt.Sprintf("%s/%s", connectionPermissionsBasePath, testUserConnection.Identifier),
+			Path:  fmt.Sprintf("%s/%s", ConnectionPermissionsBasePath, testUserConnection.Identifier),
 			Value: "READ",
 		},
 	}

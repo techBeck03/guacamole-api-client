@@ -52,7 +52,7 @@ func TestCreateConnectionGroup(t *testing.T) {
 		t.Errorf("Error %s connecting to guacamole with config %+v", err, connectionGroupsConfig)
 	}
 
-	createdConnectionGroup, err := client.CreateConnectionGroup(&testConnectionGroup)
+	err = client.CreateConnectionGroup(&testConnectionGroup)
 	if err != nil {
 		t.Errorf("Error %s creating connection group: %s with client %+v", err, testConnectionGroup.Name, client)
 	}
@@ -62,8 +62,6 @@ func TestCreateConnectionGroup(t *testing.T) {
 	if err != nil {
 		t.Errorf("Disconnect errors: %s\n", err)
 	}
-
-	testConnectionGroup = createdConnectionGroup
 }
 
 func TestReadConnectionGroup(t *testing.T) {

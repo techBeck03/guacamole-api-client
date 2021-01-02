@@ -12,19 +12,18 @@ const (
 )
 
 // CreateUser creates a guacamole user
-func (c *Client) CreateUser(user *types.GuacUser) (types.GuacUser, error) {
-	var ret types.GuacUser
+func (c *Client) CreateUser(user *types.GuacUser) error {
 	request, err := c.CreateJSONRequest(http.MethodPost, fmt.Sprintf("%s/%s", c.baseURL, usersBasePath), user)
 
 	if err != nil {
-		return ret, err
+		return err
 	}
 
-	err = c.Call(request, &ret)
+	err = c.Call(request, &user)
 	if err != nil {
-		return ret, err
+		return err
 	}
-	return ret, nil
+	return nil
 }
 
 // ReadUser gets a user by username
