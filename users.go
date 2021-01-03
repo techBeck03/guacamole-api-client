@@ -44,8 +44,8 @@ func (c *Client) ReadUser(username string) (types.GuacUser, error) {
 }
 
 // UpdateUser updates a user by username
-func (c *Client) UpdateUser(user *types.GuacUser) error {
-	request, err := c.CreateJSONRequest(http.MethodPut, fmt.Sprintf("%s/%s/%s", c.baseURL, usersBasePath, user.Username), user)
+func (c *Client) UpdateUser(identifier string, user *types.GuacUser) error {
+	request, err := c.CreateJSONRequest(http.MethodPut, fmt.Sprintf("%s/%s/%s", c.baseURL, usersBasePath, identifier), user)
 
 	if err != nil {
 		return err

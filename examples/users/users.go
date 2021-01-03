@@ -42,7 +42,7 @@ func main() {
 	// Update user
 	newUser.Attributes.GuacFullName = "Go Testing User"
 
-	err = client.UpdateUser(&newUser)
+	err = client.UpdateUser(newUser.Username, &newUser)
 
 	if err != nil {
 		log.Fatal(err)

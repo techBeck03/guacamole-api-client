@@ -109,7 +109,7 @@ func TestUpdateUser(t *testing.T) {
 
 	user.Attributes.GuacFullName = "Go Testing User"
 
-	err = client.UpdateUser(&user)
+	err = client.UpdateUser(user.Username, &user)
 
 	if err != nil {
 		t.Errorf("Error %s updating user: %s with client %+v", err, testUser.Username, client)
