@@ -45,8 +45,8 @@ func (c *Client) ReadUserGroup(name string) (types.GuacUserGroup, error) {
 }
 
 // UpdateUserGroup updates a user group by username
-func (c *Client) UpdateUserGroup(identifier string, group *types.GuacUserGroup) error {
-	request, err := c.CreateJSONRequest(http.MethodPut, fmt.Sprintf("%s/%s/%s", c.baseURL, userGroupsBasePath, identifier), group)
+func (c *Client) UpdateUserGroup(group *types.GuacUserGroup) error {
+	request, err := c.CreateJSONRequest(http.MethodPut, fmt.Sprintf("%s/%s/%s", c.baseURL, userGroupsBasePath, group.Identifier), group)
 
 	if err != nil {
 		return err

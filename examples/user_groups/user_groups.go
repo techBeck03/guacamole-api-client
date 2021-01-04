@@ -42,7 +42,7 @@ func main() {
 	// Update user group
 	newGroup.Attributes.Disabled = "true"
 
-	err = client.UpdateUserGroup(newGroup.Identifier, &newGroup)
+	err = client.UpdateUserGroup(&newGroup)
 
 	if err != nil {
 		log.Fatal(err)

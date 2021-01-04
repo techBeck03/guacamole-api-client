@@ -109,7 +109,7 @@ func TestUpdateUserGroup(t *testing.T) {
 
 	group.Attributes.Disabled = "true"
 
-	err = client.UpdateUserGroup(group.Identifier, &group)
+	err = client.UpdateUserGroup(&group)
 
 	if err != nil {
 		t.Errorf("Error %s updating user group with identifier: %s with client %+v", err, testGroup.Identifier, client)
