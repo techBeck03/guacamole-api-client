@@ -131,7 +131,7 @@ func (c *Client) SetUserConnectionPermissions(username string, permissionItems *
 
 // SetUserGroupMembership defines parent groups of a given user
 func (c *Client) SetUserGroupMembership(username string, permissionItems *[]types.GuacPermissionItem) error {
-	request, err := c.CreateJSONRequest(http.MethodPatch, fmt.Sprintf("%s/%s/%s/userGroups", c.baseURL, userGroupsBasePath, username), permissionItems)
+	request, err := c.CreateJSONRequest(http.MethodPatch, fmt.Sprintf("%s/%s/%s/userGroups", c.baseURL, usersBasePath, username), permissionItems)
 
 	if err != nil {
 		return err
@@ -145,9 +145,9 @@ func (c *Client) SetUserGroupMembership(username string, permissionItems *[]type
 }
 
 // GetUserGroupMembership gets parent groups of a given user
-func (c *Client) GetUserGroupMembership(username string, permissionItems *[]types.GuacPermissionItem) ([]string, error) {
+func (c *Client) GetUserGroupMembership(username string) ([]string, error) {
 	var ret []string
-	request, err := c.CreateJSONRequest(http.MethodGet, fmt.Sprintf("%s/%s/%s/userGroups", c.baseURL, userGroupsBasePath, username), nil)
+	request, err := c.CreateJSONRequest(http.MethodGet, fmt.Sprintf("%s/%s/%s/userGroups", c.baseURL, usersBasePath, username), nil)
 
 	if err != nil {
 		return ret, err
@@ -158,4 +158,19 @@ func (c *Client) GetUserGroupMembership(username string, permissionItems *[]type
 		return ret, err
 	}
 	return ret, nil
+}
+
+// SetUserPermissions gets parent groups of a given user
+func (c *Client) SetUserPermissions(username string, permissionItems *[]types.GuacPermissionItem) error {
+	request, err := c.CreateJSONRequest(http.MethodPatch, fmt.Sprintf("%s/%s/%s/permissions", c.baseURL, usersBasePath, username), permissionItems)
+
+	if err != nil {
+		return err
+	}
+
+	err = c.Call(request, nil)
+	if err != nil {
+		return err
+	}
+	return nil
 }
