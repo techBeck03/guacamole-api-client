@@ -206,3 +206,34 @@ func (c *Client) SetUserGroupPermissions(group string, permissionItems *[]types.
 	}
 	return nil
 }
+
+// GetUserGroupUsers retrieves member groups of a given group
+func (c *Client) GetUserGroupUsers(group string) ([]string, error) {
+	var ret []string
+	request, err := c.CreateJSONRequest(http.MethodGet, fmt.Sprintf("%s/%s/%s/memberUsers", c.baseURL, userGroupsBasePath, group), nil)
+
+	if err != nil {
+		return ret, err
+	}
+
+	err = c.Call(request, &ret)
+	if err != nil {
+		return ret, err
+	}
+	return ret, nil
+}
+
+// SetUserGroupUsers defines users of a given group
+func (c *Client) SetUserGroupUsers(group string, permissionItems *[]types.GuacPermissionItem) error {
+	request, err := c.CreateJSONRequest(http.MethodPatch, fmt.Sprintf("%s/%s/%s/memberUsers", c.baseURL, userGroupsBasePath, group), permissionItems)
+
+	if err != nil {
+		return err
+	}
+
+	err = c.Call(request, nil)
+	if err != nil {
+		return err
+	}
+	return nil
+}

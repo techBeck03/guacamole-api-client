@@ -18,7 +18,7 @@ var (
 		Password:               os.Getenv("GUACAMOLE_PASSWORD"),
 		DisableTLSVerification: true,
 	}
-	testUser                = types.GuacUser{Username: "testing"}
+	testUser                = types.GuacUser{Username: "testingUsers"}
 	testUserMemberGroup     = types.GuacUserGroup{Identifier: "Test User Group"}
 	testUserConnectionGroup = types.GuacConnectionGroup{
 		Name:             "Testing Users Group",

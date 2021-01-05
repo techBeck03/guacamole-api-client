@@ -31,6 +31,7 @@ var (
 		Protocol: "ssh",
 	}
 	testUserGroupPermissionItems = []types.GuacPermissionItem{}
+	testUserGroupUser            = types.GuacUser{Username: "testingUserGroups"}
 )
 
 func TestListUserGroups(t *testing.T) {
@@ -480,6 +481,66 @@ func TestSetUserGroupPermissions(t *testing.T) {
 
 	if len(permissions.SystemPermissions) > 0 {
 		t.Errorf("Error removing system permissions.  Expected none but found: %s", strings.Join(permissions.SystemPermissions[:], ", "))
+	}
+
+	err = client.Disconnect()
+
+	if err != nil {
+		t.Errorf("Disconnect errors: %s\n", err)
+	}
+}
+
+func TestSetUserGroupUsers(t *testing.T) {
+	client := New(userGroupsConfig)
+
+	err := client.Connect()
+	if err != nil {
+		t.Errorf("Error %s connecting to guacamole with config %+v", err, userGroupsConfig)
+	}
+
+	// Create test user
+	err = client.CreateUser(&testUserGroupUser)
+	if err != nil {
+		t.Errorf("Error creating guac user %s with error: %s", testUserGroupUser.Username, err)
+	}
+
+	// Add user to group
+	permissionItems := []types.GuacPermissionItem{
+		client.NewAddGroupMemberPermission(testUserGroupUser.Username),
+	}
+
+	err = client.SetUserGroupUsers(testGroup.Identifier, &permissionItems)
+
+	if err != nil {
+		t.Errorf("Error adding user: %s to group: %s with error: %s\n", testUserGroupUser.Username, testGroup.Identifier, err)
+	}
+
+	err = client.Disconnect()
+
+	if err != nil {
+		t.Errorf("Disconnect errors: %s\n", err)
+	}
+}
+
+func TestGettUserGroupUsers(t *testing.T) {
+	client := New(userGroupsConfig)
+
+	err := client.Connect()
+	if err != nil {
+		t.Errorf("Error %s connecting to guacamole with config %+v", err, userGroupsConfig)
+	}
+
+	// Read member users
+	users, err := client.GetUserGroupUsers(testGroup.Identifier)
+
+	if users[0] != testUserGroupUser.Username {
+		t.Errorf("Expected member user: %s but found none\n", testUserGroupUser.Username)
+	}
+
+	// Remove user
+	err = client.DeleteUser(testUserGroupUser.Username)
+	if err != nil {
+		t.Errorf("Error deleting test user: %s with error: %s\n", testUserGroupUser.Username, err)
 	}
 
 	err = client.Disconnect()

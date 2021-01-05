@@ -118,6 +118,30 @@ func main() {
 
 	fmt.Printf("System permissions = %s\n", strings.Join(permissions.SystemPermissions[:], ", "))
 
+	// Create user and add as member
+	user := types.GuacUser{Username: "testUser"}
+	err = client.CreateUser(&user)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Create user permission
+	permissionItems = []types.GuacPermissionItem{
+		client.NewAddGroupMemberPermission(user.Username),
+	}
+
+	err = client.SetUserGroupUsers(newGroup.Identifier, &permissionItems)
+
+	// Get member users
+	users, err := client.GetUserGroupUsers(newGroup.Identifier)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Printf("Member users = %s\n", strings.Join(users[:], ", "))
+
 	// Delete user group
 	err = client.DeleteUserGroup(newGroup.Identifier)
 
