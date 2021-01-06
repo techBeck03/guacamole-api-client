@@ -42,8 +42,8 @@ func main() {
 	}
 
 	// Update connection
-	newConnection.Properties.Hostname = "testing.example.com"
-	newConnection.Properties.Port = "22"
+	newConnection.Parameters.Hostname = "testing.example.com"
+	newConnection.Parameters.Port = "22"
 	newConnection.Attributes.MaxConnections = "2"
 
 	err = client.UpdateConnection(&newConnection)

@@ -56,7 +56,7 @@ func (c *Client) ReadConnection(identifier string) (types.GuacConnection, error)
 		return ret, err
 	}
 
-	ret.Properties = retParams
+	ret.Parameters = retParams
 
 	return ret, nil
 }
@@ -118,7 +118,7 @@ func (c *Client) ReadConnectionByPath(path string) (types.GuacConnection, error)
 		return ret, err
 	}
 
-	ret.Properties = retParams
+	ret.Parameters = retParams
 
 	return ret, nil
 }
