@@ -125,8 +125,8 @@ func TestUpdateConnection(t *testing.T) {
 		t.Errorf("Error %s reading connection: %s with client %+v", err, testConnection.Identifier, client)
 	}
 
-	connection.Properties.Hostname = "testing.example.com"
-	connection.Properties.Port = "22"
+	connection.Parameters.Hostname = "testing.example.com"
+	connection.Parameters.Port = "22"
 	connection.Attributes.MaxConnections = "2"
 
 	err = client.UpdateConnection(&connection)
