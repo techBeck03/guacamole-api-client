@@ -19,7 +19,8 @@ type GuacConnectionGroupAttributes struct {
 	EnableSessionAffinity string `json:"enable-session-affinity"`
 }
 
-func (GuacConnectionGroup) validTypes() []string {
+// ValidTypes returns list of valid types
+func (GuacConnectionGroup) ValidTypes() []string {
 	return []string{
 		"ORGANIZATIONAL",
 		"BALANCING",
