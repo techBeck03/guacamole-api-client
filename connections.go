@@ -165,3 +165,25 @@ func (c *Client) ListConnections() ([]types.GuacConnection, error) {
 	}
 	return ret, nil
 }
+
+// ListConnectionSharingProfiles lists all sharingProfile of connection
+func (c *Client) ListConnectionSharingProfiles(connectionIdentifier string) ([]types.GuacSharingProfile, error) {
+	var ret []types.GuacSharingProfile
+	var connectionList map[string]types.GuacSharingProfile
+
+	request, err := c.CreateJSONRequest(http.MethodGet, fmt.Sprintf("%s/%s/%s/sharingProfiles", c.baseURL, connectionsBasePath, connectionIdentifier), nil)
+
+	if err != nil {
+		return ret, err
+	}
+
+	err = c.Call(request, &connectionList)
+	if err != nil {
+		return ret, err
+	}
+
+	for _, connection := range connectionList {
+		ret = append(ret, connection)
+	}
+	return ret, nil
+}
