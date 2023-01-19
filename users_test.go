@@ -1,3 +1,4 @@
+//go:build all || unittests
 // +build all unittests
 
 package guacamole

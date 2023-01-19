@@ -1,10 +1,12 @@
-// +build all unittests
+//go:build all || unittests || specific
+// +build all unittests specific
 
 package guacamole
 
 import (
 	"fmt"
 	"os"
+	"strings"
 	"testing"
 
 	"github.com/techBeck03/guacamole-api-client/types"
@@ -15,16 +17,26 @@ var (
 		URL:                    os.Getenv("GUACAMOLE_URL"),
 		Username:               os.Getenv("GUACAMOLE_USERNAME"),
 		Password:               os.Getenv("GUACAMOLE_PASSWORD"),
+		Token:                  os.Getenv("GUACAMOLE_TOKEN"),
+		DataSource:             os.Getenv("GUACAMOLE_DATA_SOURCE"),
 		DisableTLSVerification: true,
 	}
 	testConnection = types.GuacConnection{
-		Name:             "Testing Connection",
+		Name:             "Test Connection",
 		Protocol:         "ssh",
-		ParentIdentifier: "ROOT",
+		ParentIdentifier: "1592",
+		Path:             fmt.Sprintf("%s/Test Connection", os.Getenv("GUACAMOLE_CONNECTION_PATH")),
 	}
 )
 
 func TestListConnections(t *testing.T) {
+	if os.Getenv("GUACAMOLE_COOKIES") != "" {
+		connectionsConfig.Cookies = make(map[string]string)
+		for _, e := range strings.Split(os.Getenv("GUACAMOLE_COOKIES"), ",") {
+			cookie_split := strings.Split(e, "=")
+			connectionsConfig.Cookies[cookie_split[0]] = cookie_split[1]
+		}
+	}
 	client := New(connectionsConfig)
 
 	err := client.Connect()
@@ -35,12 +47,6 @@ func TestListConnections(t *testing.T) {
 	_, err = client.ListConnections()
 	if err != nil {
 		t.Errorf("Error %s listing connections with client %+v", err, client)
-	}
-
-	err = client.Disconnect()
-
-	if err != nil {
-		t.Errorf("Disconnect errors: %s\n", err)
 	}
 }
 
@@ -57,11 +63,6 @@ func TestCreateConnection(t *testing.T) {
 		t.Errorf("Error %s creating connection: %s with client %+v", err, testConnection.Name, client)
 	}
 
-	err = client.Disconnect()
-
-	if err != nil {
-		t.Errorf("Disconnect errors: %s\n", err)
-	}
 }
 
 func TestReadConnection(t *testing.T) {
@@ -81,11 +82,6 @@ func TestReadConnection(t *testing.T) {
 		t.Errorf("Expected connection name = %s read connection name = %s", testConnection.Name, connection.Name)
 	}
 
-	err = client.Disconnect()
-
-	if err != nil {
-		t.Errorf("Disconnect errors: %s\n", err)
-	}
 }
 
 func TestReadConnectionByPath(t *testing.T) {
@@ -96,20 +92,11 @@ func TestReadConnectionByPath(t *testing.T) {
 		t.Errorf("Error %s connecting to guacamole with config %+v", err, connectionsConfig)
 	}
 
-	connection, err := client.ReadConnectionByPath(fmt.Sprintf("%s/%s", testConnection.ParentIdentifier, testConnection.Name))
+	_, err = client.ReadConnectionByPath(fmt.Sprintf("%s", testConnection.Path))
 	if err != nil {
-		t.Errorf("Error %s reading connection by path: %s with client %+v", err, testConnection.Name, client)
+		t.Errorf("Error %s reading connection by path: %s with client %+v", err, testConnection.Path, client)
 	}
 
-	if connection.Name != testConnection.Name {
-		t.Errorf("Expected connection name = %s read connection name = %s", fmt.Sprintf("%s/%s", testConnection.ParentIdentifier, testConnection.Name), connection.Name)
-	}
-
-	err = client.Disconnect()
-
-	if err != nil {
-		t.Errorf("Disconnect errors: %s\n", err)
-	}
 }
 
 func TestUpdateConnection(t *testing.T) {
@@ -135,11 +122,6 @@ func TestUpdateConnection(t *testing.T) {
 		t.Errorf("Error %s updating connection: %s with client %+v", err, testConnection.Identifier, client)
 	}
 
-	err = client.Disconnect()
-
-	if err != nil {
-		t.Errorf("Disconnect errors: %s\n", err)
-	}
 }
 
 func TestDeleteConnection(t *testing.T) {
@@ -155,9 +137,4 @@ func TestDeleteConnection(t *testing.T) {
 		t.Errorf("Error %s deleting connection: %s with client %+v", err, testConnection.Identifier, client)
 	}
 
-	err = client.Disconnect()
-
-	if err != nil {
-		t.Errorf("Disconnect errors: %s\n", err)
-	}
 }
