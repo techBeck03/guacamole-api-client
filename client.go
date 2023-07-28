@@ -182,7 +182,3 @@ func (c *Client) Call(request *http.Request, result interface{}) error {
 	}
 	return nil
 }
-
-func (c *Client) Token() (token string) {
-	return c.token
-}
